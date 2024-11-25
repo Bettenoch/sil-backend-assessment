@@ -37,10 +37,6 @@ select = [
 
 ]
 
-[tool.mypy]
-strict = true
-exclude = ["venv", ".venv"]
-
 ignore = [
 
     "B008",
@@ -48,6 +44,12 @@ ignore = [
     "W191",
     "B904",
 ]
+
+[tool.mypy]
+strict = true
+exclude = ["venv", ".venv"]
+
+
 
 [tool.ruff.lint.pyupgrade]
 keep-runtime-typing = true
