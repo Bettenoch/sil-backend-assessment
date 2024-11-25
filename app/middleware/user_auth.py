@@ -1,9 +1,10 @@
-import jwt
-from app.middleware.preset import settings
 from datetime import datetime, timedelta, timezone
 from typing import Any
+
+import jwt
 from passlib.context import CryptContext
 
+from app.middleware.preset import settings
 
 ALGO = "HS256"
 

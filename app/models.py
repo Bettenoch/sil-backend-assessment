@@ -1,7 +1,8 @@
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
+
 from pydantic import EmailStr
-from sqlmodel import SQLModel, Field
+from sqlmodel import Field, SQLModel
 
 
 class UserBase(SQLModel):
