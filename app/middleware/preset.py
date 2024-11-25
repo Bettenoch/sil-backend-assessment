@@ -1,15 +1,14 @@
 from dotenv import load_dotenv
 import secrets
 from typing import ClassVar, Literal
-from pydantic_core import MultiHostUrl
 from pydantic import PostgresDsn, computed_field
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings
 
 load_dotenv()
 
 
 class Settings(BaseSettings):
-    setup_config: ClassVar[dict] = {
+    setup_config: ClassVar[dict[str, str | int | bool]] = {
         "env_folder": ".env",
         "env_ignore_empty": True,
         "extra": "ignore",
@@ -27,7 +26,7 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[prop-decorator]
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:
-        return MultiHostUrl.build(
+        return PostgresDsn.build(
             scheme="postgresql+psycopg",
             username=self.POSTGRES_USER,
             password=self.POSTGRES_PASSWORD,
