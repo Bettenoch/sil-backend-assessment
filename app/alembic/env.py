@@ -2,8 +2,8 @@ from logging.config import fileConfig
 import os
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-from app.models import SQLModel # noqa
-from app.middleware.preset import settings # noqa
+from app.models import SQLModel  # noqa
+from app.middleware.preset import settings  # noqa
 from alembic import context
 
 config = context.config
@@ -17,14 +17,11 @@ target_metadata = SQLModel.metadata
 def get_url():
     return str(settings.SQLALCHEMY_DATABASE_URI)
 
+
 def run_migrations_offline() -> None:
-  
+
     url = get_url()
-    context.configure(
-        url=url,
-        target_metadata=target_metadata,
-        compare_type=True
-    )
+    context.configure(url=url, target_metadata=target_metadata, compare_type=True)
 
     with context.begin_transaction():
         context.run_migrations()

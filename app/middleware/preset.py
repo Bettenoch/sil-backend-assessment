@@ -2,14 +2,11 @@ from dotenv import load_dotenv
 import secrets
 from typing import ClassVar, Literal
 from pydantic_core import MultiHostUrl
-from pydantic import (
-    PostgresDsn,
-    computed_field,
-    model_validator,
-)
+from pydantic import PostgresDsn, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 load_dotenv()
+
 
 class Settings(BaseSettings):
     setup_config: ClassVar[dict] = {
@@ -17,7 +14,7 @@ class Settings(BaseSettings):
         "env_ignore_empty": True,
         "extra": "ignore",
     }
-    
+
     SECRET_KEY: str = secrets.token_urlsafe(32)
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
     PROJECT_NAME: str
@@ -26,7 +23,7 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str = ""
     POSTGRES_PORT: int = 5432
-    
+
     @computed_field  # type: ignore[prop-decorator]
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:
@@ -38,10 +35,11 @@ class Settings(BaseSettings):
             port=self.POSTGRES_PORT,
             path=self.POSTGRES_DB,
         )
+
     FIRST_SUPERUSER_EMAIL: str
     FIRST_SUPERUSER_PASSWORD: str
     FIRST_SUPERUSER_NAME: str
     FIRST_SUPERUSER_USERNAME: str
-    
+
+
 settings = Settings()  # type: ignore
-    
