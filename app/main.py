@@ -4,5 +4,5 @@ app = FastAPI()
 
 
 @app.get("/")
-async def root() -> dict:
+async def root() -> dict[str, str]:
     return {"message": "Should be working"}
