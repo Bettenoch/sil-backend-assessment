@@ -20,4 +20,4 @@ def init_db(session: Session) -> None:
             password=settings.FIRST_SUPERUSER_PASSWORD,
         )
 
-        top_user = crud.create_user(db=session, user_create=user_in)
+        top_user = crud.create_user(db=session, create_user=user_in)
