@@ -1,4 +1,5 @@
 from sqlmodel import Session
+
 from app.middleware.user_auth import get_hashed_password
 from app.models import User, UserCreate
 

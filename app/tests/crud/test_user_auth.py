@@ -1,5 +1,5 @@
-from sqlmodel import Session
 from faker import Faker
+from sqlmodel import Session
 
 from app import crud
 from app.models import UserCreate
