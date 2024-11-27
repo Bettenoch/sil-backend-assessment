@@ -1,18 +1,19 @@
-#app/api/user_controllers.py
+# app/api/user_controllers.py
 
 from collections.abc import Generator
+from typing import Annotated
+
+import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-import jwt
 from jwt.exceptions import InvalidTokenError
 from pydantic import ValidationError
-from typing_extensions import Annotated
-from app.middleware.preset import settings
 from sqlmodel import Session
+
 from app.middleware.db import engine
+from app.middleware.preset import settings
 from app.middleware.user_auth import ALGO
 from app.models import TokenPayload, User
-
 
 user_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_V1_STR}/login/authenticated_token"

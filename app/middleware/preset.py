@@ -16,13 +16,13 @@ class Settings(BaseSettings):
     }
 
     SECRET_KEY: str = secrets.token_urlsafe(32)
-    
+
     API_V1_STR: str = "/sil/v1"
     SECRET_KEY: str = secrets.token_urlsafe(32)
 
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
-    
+
     #db credentials
     PROJECT_NAME: str
     POSTGRES_DB: str = ""

@@ -1,11 +1,13 @@
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
-from app.middleware.preset import settings
+
 from app.api.main import api_router
+from app.middleware.preset import settings
 
 
-def generate_unique_id_for_route(route:APIRoute) -> str:
-     return f"{route.tags[0]}-{route.name}"
+def generate_unique_id_for_route(route: APIRoute) -> str:
+    return f"{route.tags[0]}-{route.name}"
+
 
 app = FastAPI(
     title="SIL BACKEND ASSESSMENT",

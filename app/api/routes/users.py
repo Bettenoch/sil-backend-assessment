@@ -1,9 +1,11 @@
-from typing import Any
 import uuid
+from typing import Any
+
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import select, func
+from sqlmodel import func, select
+
 from app import crud
-from app.api.user_controllers import SessionDep, CurrentUser, get_current_superuser
+from app.api.user_controllers import CurrentUser, SessionDep, get_current_superuser
 from app.middleware.user_auth import get_hashed_password, verify_password
 from app.models import (
     Message,
@@ -12,11 +14,10 @@ from app.models import (
     UserCreate,
     UserPublic,
     UserRegister,
+    UsersPublic,
     UserUpdate,
     UserUpdateMe,
-    UsersPublic,
 )
-
 
 router = APIRouter()
 

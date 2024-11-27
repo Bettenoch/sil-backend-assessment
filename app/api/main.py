@@ -1,9 +1,6 @@
-
-
 from fastapi import APIRouter
 
 from app.api.routes import health_check, login, users
-
 
 api_router = APIRouter()
 

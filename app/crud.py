@@ -1,4 +1,4 @@
-#app/crud.py
+# app/crud.py
 
 from typing import Any
 
@@ -41,13 +41,15 @@ def get_user_by_username(*, db: Session, username: str) -> User | None:
     inst_user = db.exec(statement).first()
     return inst_user
 
-def authenticate_by_username_and_email(*, db: Session, username: str, email: str) -> User | None:
+
+def authenticate_by_username_and_email(
+    *, db: Session, username: str, email: str
+) -> User | None:
     statement = select(User).where(and_(User.username == username, User.email == email))
     inst_user = db.exec(statement).first()
     if not inst_user:
         return None
     return inst_user
-
 
 
 def get_user_by_email(*, db: Session, email: str) -> User | None:
