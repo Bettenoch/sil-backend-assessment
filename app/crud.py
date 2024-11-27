@@ -1,3 +1,5 @@
+# app/crud.py
+
 from typing import Any
 
 from sqlmodel import Session, and_, select
@@ -34,7 +36,15 @@ def update_user(*, db: Session, inst_user: User, user_in: UserUpdate) -> Any:
     return inst_user
 
 
-def get_user_by_username(*, db: Session, username: str, email: str) -> User | None:
+def get_user_by_username(*, db: Session, username: str) -> User | None:
+    statement = select(User).where(User.username == username)
+    inst_user = db.exec(statement).first()
+    return inst_user
+
+
+def authenticate_by_username_and_email(
+    *, db: Session, username: str, email: str
+) -> User | None:
     statement = select(User).where(and_(User.username == username, User.email == email))
     inst_user = db.exec(statement).first()
     if not inst_user:
