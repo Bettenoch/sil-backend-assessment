@@ -3,7 +3,7 @@ from fastapi.testclient import TestClient
 from app.middleware.preset import settings
 
 
-def test_get_user_access_token(client: TestClient)-> None:
+def test_get_user_access_token(client: TestClient) -> None:
     user_obj = {
         "username": settings.FIRST_SUPERUSER_EMAIL,
         "password": settings.FIRST_SUPERUSER_PASSWORD,
