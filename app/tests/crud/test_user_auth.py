@@ -55,7 +55,7 @@ def test_should_authenticate_with_username(db: Session) -> None:
     user_in = UserCreate(email=email, name=name, username=username, password=password)
 
     user = crud.create_user(db=db, create_user=user_in)
-    authenticated_user = crud.get_user_by_username(
+    authenticated_user = crud.authenticate_by_username_and_email(
         db=db, email=email, username=username
     )
     assert authenticated_user
