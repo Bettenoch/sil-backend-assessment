@@ -1,3 +1,4 @@
+# app/tests/confest.py
 from collections.abc import Generator
 
 import pytest
@@ -6,13 +7,10 @@ from sqlmodel import Session, delete
 
 from app.main import app
 from app.middleware.db import engine, init_db
+from app.middleware.preset import settings
 from app.models import User
-
-
-@pytest.fixture(scope="module")
-def client() -> Generator[TestClient, None, None]:
-    with TestClient(app) as c:
-        yield c
+from app.tests.utils.token_gen import get_superuser_headers
+from app.tests.utils.user_auth import get_email_auth_token
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -24,5 +22,25 @@ def db() -> Generator[Session, None, None]:
 
         # Clear the User table after tests
         statement = delete(User)
-        session.execute(statement)  # Use `execute` for general SQL statements
+        session.execute(statement)
         session.commit()
+
+
+@pytest.fixture(scope="module")
+def client() -> Generator[TestClient, None, None]:
+    with TestClient(app) as c:
+        yield c
+
+
+@pytest.fixture(scope="module")
+def users_token_header(client: TestClient, db:Session) -> dict[str, str]:
+    return get_email_auth_token(
+        client=client, session=db, email=settings.EMAIL_TEST_USER
+    )
+
+
+
+@pytest.fixture(scope="module")
+def superuser_token(client: TestClient) -> dict[str, str]:
+    return get_superuser_headers(client)
+
