@@ -46,5 +46,7 @@ class Settings(BaseSettings):
     FIRST_SUPERUSER_NAME: str
     FIRST_SUPERUSER_USERNAME: str
 
+    EMAIL_TEST_USER: str = "test@example.com"
+
 
 settings = Settings()  # type: ignore
