@@ -1,11 +1,18 @@
 import secrets
-from typing import ClassVar, Literal
+from typing import Annotated, Any, ClassVar, Literal
 
 from dotenv import load_dotenv
-from pydantic import PostgresDsn, computed_field
+from pydantic import AnyUrl, BeforeValidator, PostgresDsn, computed_field
 from pydantic_settings import BaseSettings
 
 load_dotenv()
+
+def parse_cors(v: Any) -> list[str] | str:
+    if isinstance(v, str) and not v.startswith("["):
+        return [i.strip() for i in v.split(",")]
+    elif isinstance(v, list | str):
+        return v
+    raise ValueError(v)
 
 
 class Settings(BaseSettings):
@@ -21,6 +28,8 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
 
+    
+    
     # db credentials
     PROJECT_NAME: str
     POSTGRES_DB: str = ""
@@ -28,6 +37,12 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str = ""
     POSTGRES_PORT: int = 5432
+    
+    FRONTEND_HOST: str = "http://localhost:5173"
+
+    BACKEND_CORS_ORIGINS: Annotated[
+        list[AnyUrl] | str, BeforeValidator(parse_cors)
+    ] = []
 
     @computed_field  # type: ignore[prop-decorator]
     @property
@@ -41,6 +56,12 @@ class Settings(BaseSettings):
             path=self.POSTGRES_DB,
         )
 
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def all_cors_origins(self) -> list[str]:
+        return [str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS] + [
+            self.FRONTEND_HOST
+        ]
     FIRST_SUPERUSER_EMAIL: str
     FIRST_SUPERUSER_PASSWORD: str
     FIRST_SUPERUSER_NAME: str
