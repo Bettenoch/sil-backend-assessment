@@ -12,7 +12,7 @@ from sqlmodel import Session
 
 from app.middleware.db import engine
 from app.middleware.preset import settings
-from app.middleware.user_auth import ALGO
+from app.middleware import user_auth
 from app.models import TokenPayload, User
 
 user_oauth2 = OAuth2PasswordBearer(
@@ -31,7 +31,7 @@ TokenDep = Annotated[str, Depends(user_oauth2)]
 
 def get_current_logedin_user(session: SessionDep, token: TokenDep) -> User:
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGO])
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[user_auth.ALGO])
         token_obj = TokenPayload(**payload)
     except (InvalidTokenError, ValidationError):
         raise HTTPException(
