@@ -1,11 +1,12 @@
 # app/crud.py
 
 from typing import Any
+import uuid
 
 from sqlmodel import Session, and_, select
 
 from app.middleware.user_auth import get_hashed_password, verify_password
-from app.models import User, UserCreate, UserUpdate
+from app.models import Album, AlbumCreate, AlbumUpdate, Photo, PhotoCreate, PhotoUpdate, User, UserCreate, UserUpdate
 
 
 def create_user(*, create_user: UserCreate, db: Session) -> User:
@@ -65,3 +66,58 @@ def authenticate_by_password(*, db: Session, email: str, password: str) -> User 
     if not verify_password(password, inst_user.hashed_password):
         return None
     return inst_user
+
+
+#----------ALBUMS CURDS OPERATIONS--------
+
+def create_album(
+    *, db:Session, create_album: AlbumCreate, owner_id: uuid.UUID) -> Album:
+    album= Album.model_validate(create_album, update={"owner_id": owner_id})
+    db.add(album)
+    db.commit()
+    db.refresh(album)
+    return album
+
+def update_album(
+    *, db:Session, album: Album, album_in: AlbumUpdate
+)-> Album:
+    album_obj = album_in.model_dump(exclude_unset=True)
+    album.sqlmodel_update(album_obj)
+    db.add(album)
+    db.commit()
+    db.refresh(album)
+    return album
+def get_album_bg_id(
+    *, db:Session, album_id:uuid.UUID, 
+) -> Album | None:
+    query= select(Album).where(Album.id == album_id)
+    album = db.exec(query).first()
+    return album
+
+#----------PHOTOS CURDS OPERATIONS--------
+
+def create_photo(
+    *, db: Session, create_photo: PhotoCreate, owner_id: uuid.UUID
+) -> Photo:
+    photo = Photo.model_validate(
+        create_photo,
+        update={
+            "owner_id": owner_id,
+            "album_id": create_photo.album_id,
+        }
+    )
+    db.add(photo)
+    db.commit()
+    db.refresh(photo)
+    return photo
+
+def update_photo(
+    *, db: Session, photo: Photo, photo_in:PhotoUpdate
+) -> Photo:
+    
+    photo_obj = photo_in.model_dump(exclude_unset=True)
+    photo.sqlmodel_update(photo_obj)
+    db.add(photo)
+    db.commit()
+    db.refresh(photo)
+    return photo
