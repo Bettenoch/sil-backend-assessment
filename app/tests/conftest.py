@@ -19,6 +19,7 @@ def db() -> Generator[Session, None, None]:
         init_db(session)
         yield session
 
+
 @pytest.fixture(scope="module")
 def client() -> Generator[TestClient, None, None]:
     with TestClient(app) as c:
@@ -26,14 +27,12 @@ def client() -> Generator[TestClient, None, None]:
 
 
 @pytest.fixture(scope="module")
-def users_token_header(client: TestClient, db:Session) -> dict[str, str]:
+def users_token_header(client: TestClient, db: Session) -> dict[str, str]:
     return get_email_auth_token(
         client=client, session=db, email=settings.EMAIL_TEST_USER
     )
 
 
-
 @pytest.fixture(scope="module")
 def superuser_token(client: TestClient) -> dict[str, str]:
     return get_superuser_headers(client)
-

@@ -1,4 +1,4 @@
-#app/tests/utils/test_get_super_user_token.py
+# app/tests/utils/test_get_super_user_token.py
 
 from unittest.mock import patch
 
@@ -8,7 +8,7 @@ from app.main import app
 from app.tests.utils.token_gen import get_superuser_headers
 
 
-def test_get_superuser_headers()-> None:
+def test_get_superuser_headers() -> None:
     client = TestClient(app)
 
     # Mock settings values
@@ -28,7 +28,9 @@ def test_get_superuser_headers()-> None:
                 "password": mock_settings.FIRST_SUPERUSER_PASSWORD,
             },
         )
-        assert response.status_code == 200, f"Unexpected status code: {response.status_code}"
+        assert (
+            response.status_code == 200
+        ), f"Unexpected status code: {response.status_code}"
 
         # Validate the headers returned by the function
         assert "Authorization" in response_headers

@@ -7,6 +7,7 @@ from pydantic_settings import BaseSettings
 
 load_dotenv()
 
+
 def parse_cors(v: Any) -> list[str] | str:
     if isinstance(v, str) and not v.startswith("["):
         return [i.strip() for i in v.split(",")]
@@ -27,8 +28,6 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/sil/v1"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
-
-
 
     # db credentials
     PROJECT_NAME: str
@@ -62,6 +61,7 @@ class Settings(BaseSettings):
         return [str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS] + [
             self.FRONTEND_HOST
         ]
+
     FIRST_SUPERUSER_EMAIL: str
     FIRST_SUPERUSER_PASSWORD: str
     FIRST_SUPERUSER_NAME: str

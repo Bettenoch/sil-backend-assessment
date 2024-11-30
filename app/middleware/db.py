@@ -18,7 +18,7 @@ def init_db(session: Session) -> None:
             username=settings.FIRST_SUPERUSER_USERNAME,
             email=settings.FIRST_SUPERUSER_EMAIL,
             password=settings.FIRST_SUPERUSER_PASSWORD,
-            is_superuser=True
+            is_superuser=True,
         )
 
         top_user = crud.create_user(db=session, create_user=user_in)
