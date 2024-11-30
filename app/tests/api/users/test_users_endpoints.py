@@ -21,7 +21,7 @@ def test_get_public_user(
 def test_get_current_superuser (
     client: TestClient, superuser_token:dict[str, str]
 ) -> None:
-    req = client.get("/sil/api/users/user", headers=superuser_token)
+    req = client.get(f"{settings.API_V1_STR}/users/user", headers=superuser_token)
     assert 200 <= req.status_code < 300
     current_super_user = req.json()
     
