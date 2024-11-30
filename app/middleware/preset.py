@@ -28,8 +28,8 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
 
-    
-    
+
+
     # db credentials
     PROJECT_NAME: str
     POSTGRES_DB: str = ""
@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str = ""
     POSTGRES_PORT: int = 5432
-    
+
     FRONTEND_HOST: str = "http://localhost:5173"
 
     BACKEND_CORS_ORIGINS: Annotated[

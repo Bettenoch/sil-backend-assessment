@@ -10,9 +10,9 @@ from jwt.exceptions import InvalidTokenError
 from pydantic import ValidationError
 from sqlmodel import Session
 
+from app.middleware import user_auth
 from app.middleware.db import engine
 from app.middleware.preset import settings
-from app.middleware import user_auth
 from app.models import TokenPayload, User
 
 user_oauth2 = OAuth2PasswordBearer(

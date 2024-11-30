@@ -1,6 +1,7 @@
 #app/tests/utils/test_get_super_user_token.py
 
 from unittest.mock import patch
+
 from fastapi.testclient import TestClient
 
 from app.main import app
