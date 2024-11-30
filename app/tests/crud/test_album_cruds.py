@@ -1,4 +1,4 @@
-#app/tests/crud/test_album_cruds.py
+# app/tests/crud/test_album_cruds.py
 
 from faker import Faker
 from sqlmodel import Session
@@ -14,11 +14,9 @@ sample_fullname = faker.name()
 sample_avatar = faker.image_url()
 sample_password = faker.password()
 
-def test_album_create(
-    db: Session
-) -> None:
 
-    #user create
+def test_album_create(db: Session) -> None:
+    # user create
     name = sample_fullname
     username = sample_username
     email = sample_email
@@ -34,4 +32,3 @@ def test_album_create(
     album = crud.create_album(db=db, create_album=album_in, owner_id=user_id)
 
     assert album.title == title
-

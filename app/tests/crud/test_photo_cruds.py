@@ -13,9 +13,8 @@ sample_fullname = faker.name()
 sample_avatar = faker.image_url()
 sample_password = faker.password()
 
-def test_photo_create(
-    *, db: Session
-) -> None:
+
+def test_photo_create(*, db: Session) -> None:
     name = sample_fullname
     username = sample_username
     email = sample_email
@@ -34,7 +33,9 @@ def test_photo_create(
     photo_title = faker.file_name()
     image_url = faker.image_url()
 
-    photo_in = PhotoCreate(photo_title=photo_title, image_url=image_url, album_id=album_id)
+    photo_in = PhotoCreate(
+        photo_title=photo_title, image_url=image_url, album_id=album_id
+    )
     photo = crud.create_photo(db=db, create_photo=photo_in, owner_id=user_id)
 
     assert photo.photo_title == photo_title
