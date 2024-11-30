@@ -2,6 +2,7 @@
 
 from faker import Faker
 from sqlmodel import Session
+
 from app import crud
 from app.models import Album, AlbumCreate, UserCreate
 
@@ -16,7 +17,7 @@ sample_password = faker.password()
 def test_album_create(
     db: Session
 ) -> Album | None:
-    
+
     #user create
     name = sample_fullname
     username = sample_username
@@ -28,9 +29,9 @@ def test_album_create(
     user_id = user.id
     title = faker.name()
     description = "First test book"
-    
+
     user_in = AlbumCreate(title=title, description=description)
     album = crud.create_album(db=db, create_album=user_in, owner_id=user_id)
-    
+
     assert album.title == title
-    
+

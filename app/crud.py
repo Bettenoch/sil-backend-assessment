@@ -1,12 +1,22 @@
 # app/crud.py
 
-from typing import Any
 import uuid
+from typing import Any
 
 from sqlmodel import Session, and_, select
 
 from app.middleware.user_auth import get_hashed_password, verify_password
-from app.models import Album, AlbumCreate, AlbumUpdate, Photo, PhotoCreate, PhotoUpdate, User, UserCreate, UserUpdate
+from app.models import (
+    Album,
+    AlbumCreate,
+    AlbumUpdate,
+    Photo,
+    PhotoCreate,
+    PhotoUpdate,
+    User,
+    UserCreate,
+    UserUpdate,
+)
 
 
 def create_user(*, create_user: UserCreate, db: Session) -> User:
@@ -88,7 +98,7 @@ def update_album(
     db.refresh(album)
     return album
 def get_album_bg_id(
-    *, db:Session, album_id:uuid.UUID, 
+    *, db:Session, album_id:uuid.UUID,
 ) -> Album | None:
     query= select(Album).where(Album.id == album_id)
     album = db.exec(query).first()
@@ -114,7 +124,7 @@ def create_photo(
 def update_photo(
     *, db: Session, photo: Photo, photo_in:PhotoUpdate
 ) -> Photo:
-    
+
     photo_obj = photo_in.model_dump(exclude_unset=True)
     photo.sqlmodel_update(photo_obj)
     db.add(photo)

@@ -5,7 +5,6 @@ from sqlmodel import Session
 from app import crud
 from app.models import AlbumCreate, Photo, PhotoCreate, UserCreate
 
-
 faker = Faker()
 
 sample_email = faker.email()
@@ -27,17 +26,17 @@ def test_photo_create(
     user_id = user.id
     title = faker.name()
     description = "First test book"
-    
+
     album_in = AlbumCreate(title=title, description=description)
     album = crud.create_album(db=db, create_album=album_in, owner_id=user_id)
-    
+
     album_id = album.id
     photo_title = faker.file_name()
     image_url = faker.image_url()
-    
+
     photo_in = PhotoCreate(photo_title=photo_title, image_url=image_url, album_id=album_id)
     photo = crud.create_photo(db=db, create_photo=photo_in, owner_id=user_id)
-    
+
     assert photo.photo_title == photo_title
     assert photo.image_url == image_url
     assert photo.owner_id == album.owner_id
