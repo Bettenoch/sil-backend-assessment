@@ -1,4 +1,4 @@
-#models.py
+# models.py
 
 import uuid
 from datetime import datetime, timezone
@@ -64,8 +64,10 @@ class User(UserBase, table=True):
     hashed_password: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    albums : list["Album"] = Relationship(back_populates="owner", cascade_delete=True)
+    albums: list["Album"] = Relationship(back_populates="owner", cascade_delete=True)
     photos: list["Photo"] = Relationship(back_populates="owner", cascade_delete=True)
+
+
 # Generic message
 class Message(SQLModel):
     message: str
@@ -82,18 +84,25 @@ class TokenPayload(SQLModel):
     sub: str | None = None
 
 
-#-------------------AlBUMS-----------------#
+# -------------------AlBUMS-----------------#
+
 
 class AlbumBase(SQLModel):
-    title: str = Field( min_length=1,max_length=255, default=None)
+    title: str = Field(min_length=1, max_length=255, default=None)
     description: str | None = Field(max_length=1000, default=None)
-    cover_photo: str | None = Field(max_length=1000, default="https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=1798&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
+    cover_photo: str | None = Field(
+        max_length=1000,
+        default="https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=1798&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    )
+
 
 class AlbumCreate(AlbumBase):
     pass
 
+
 class AlbumUpdate(AlbumBase):
     title: str | None = Field(default=None, min_length=1, max_length=255)  # type: ignore
+
 
 class Album(AlbumBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
@@ -106,28 +115,33 @@ class Album(AlbumBase, table=True):
     owner: "User" = Relationship(back_populates="albums")
     photos: list["Photo"] = Relationship(back_populates="album", cascade_delete=True)
 
+
 class AlbumPublic(AlbumBase):
     id: uuid.UUID
     owner_id: uuid.UUID
     created_at: datetime
     updated_at: datetime
 
+
 class AlbumsPublic(SQLModel):
     data: list[AlbumPublic]
     count: int
 
-#-------------------PHOTOS-----------------#
+
+# -------------------PHOTOS-----------------#
+
 
 class PhotoBase(SQLModel):
-    photo_title: str= Field( min_length=1,max_length=255, default=None),
+    photo_title: str = Field(min_length=1, max_length=255, default=None)
     image_url: str = Field(max_length=355, default=None)
 
 
 class PhotoCreate(PhotoBase):
     album_id: uuid.UUID
 
+
 class PhotoUpdate(SQLModel):
-    photo_title: str | None= Field( min_length=1,max_length=255, default=None),
+    photo_title: str | None = Field(min_length=1, max_length=255, default=None)
     image_url: str | None = Field(min_length=1, max_length=355, default=None)
 
 
@@ -135,12 +149,17 @@ class Photo(PhotoBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     photo_title: str = Field(index=True, max_length=255)  # Add index to photo_title
     image_url: str = Field(max_length=355, default=None)
-    album_id: uuid.UUID = Field(foreign_key="album.id", nullable=False, ondelete="CASCADE")
-    owner_id: uuid.UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
+    album_id: uuid.UUID = Field(
+        foreign_key="album.id", nullable=False, ondelete="CASCADE"
+    )
+    owner_id: uuid.UUID = Field(
+        foreign_key="user.id", nullable=False, ondelete="CASCADE"
+    )
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     owner: "User" = Relationship(back_populates="photos")
     album: "Album" = Relationship(back_populates="photos")
+
 
 class PhotoPublic(PhotoBase):
     id: uuid.UUID
@@ -148,6 +167,7 @@ class PhotoPublic(PhotoBase):
     owner_id: uuid.UUID
     created_at: datetime
     updated_at: datetime
+
 
 class PhotosPublic(SQLModel):
     data: list[PhotoPublic]
