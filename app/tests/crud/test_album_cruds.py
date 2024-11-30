@@ -4,7 +4,7 @@ from faker import Faker
 from sqlmodel import Session
 
 from app import crud
-from app.models import Album, AlbumCreate, UserCreate
+from app.models import AlbumCreate, UserCreate
 
 faker = Faker()
 
@@ -16,7 +16,7 @@ sample_password = faker.password()
 
 def test_album_create(
     db: Session
-) -> Album | None:
+) -> None:
 
     #user create
     name = sample_fullname
