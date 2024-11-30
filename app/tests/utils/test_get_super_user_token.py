@@ -8,7 +8,7 @@ from app.main import app
 from app.tests.utils.token_gen import get_superuser_headers
 
 
-def test_get_superuser_headers():
+def test_get_superuser_headers()-> None:
     client = TestClient(app)
 
     # Mock settings values
