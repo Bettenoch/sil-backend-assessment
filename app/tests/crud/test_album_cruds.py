@@ -30,8 +30,8 @@ def test_album_create(
     title = faker.name()
     description = "First test book"
 
-    user_in = AlbumCreate(title=title, description=description)
-    album = crud.create_album(db=db, create_album=user_in, owner_id=user_id)
+    album_in = AlbumCreate(title=title, description=description)
+    album = crud.create_album(db=db, create_album=album_in, owner_id=user_id)
 
     assert album.title == title
 
