@@ -22,7 +22,9 @@ from app.models import (
 router = APIRouter()
 
 
-@router.get("/", response_model=UsersPublic)
+@router.get(
+    "/", dependencies=[Depends(get_current_superuser)], response_model=UsersPublic
+)
 def get_all_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
     """
     Get all users
@@ -37,7 +39,9 @@ def get_all_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
     return UsersPublic(data=users, count=count)
 
 
-@router.post("/", response_model=UserPublic)
+@router.post(
+    "/", dependencies=[Depends(get_current_superuser)], response_model=UserPublic
+)
 def create_user(*, session: SessionDep, user_in: UserCreate) -> Any:
     """
     Get all users
