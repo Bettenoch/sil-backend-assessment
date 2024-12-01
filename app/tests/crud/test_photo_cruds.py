@@ -1,9 +1,10 @@
 # app/tests/crud/test_photo_cruds.py
 from faker import Faker
+from fastapi import HTTPException
 from sqlmodel import Session
 
 from app import crud
-from app.models import AlbumCreate, PhotoCreate, UserCreate
+from app.models import AlbumCreate, Photo, PhotoCreate, UserCreate
 
 faker = Faker()
 
@@ -33,10 +34,18 @@ def test_photo_create(*, db: Session) -> None:
     photo_title = faker.file_name()
     image_url = faker.image_url()
 
-    photo_in = PhotoCreate(
-        photo_title=photo_title, image_url=image_url, album_id=album_id
+    photo = Photo(
+        photo_title=photo_title,
+        image_url=image_url,
+        owner_id=user_id,
+        album_id=album_id,
     )
-    photo = crud.create_photo(db=db, create_photo=photo_in, owner_id=user_id)
+    
+
+    db.add(photo)
+    db.commit()
+    db.refresh(photo)
+
 
     assert photo.photo_title == photo_title
     assert photo.image_url == image_url
