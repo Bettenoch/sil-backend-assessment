@@ -109,11 +109,8 @@ def get_album_bg_id(
     album = db.exec(query).first()
     return album
 
-def get_album_by_title(
-    *,
-    db: Session,
-    title: str
-)-> Album | None:
+
+def get_album_by_title(*, db: Session, title: str) -> Album | None:
     statement = select(Album).where(Album.title == title)
     inst_album = db.exec(statement).first()
     return inst_album
@@ -145,4 +142,3 @@ def update_photo(*, db: Session, photo: Photo, photo_in: PhotoUpdate) -> Photo:
     db.commit()
     db.refresh(photo)
     return photo
-

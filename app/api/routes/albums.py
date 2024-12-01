@@ -1,4 +1,4 @@
-#app/api/routes/albums.py
+# app/api/routes/albums.py
 
 import uuid
 from typing import Any
@@ -52,6 +52,7 @@ def get_albums(
         albums = session.exec(statement).all()
     return AlbumsPublic(data=albums, count=count)
 
+
 @router.get("/{id}", response_model=AlbumPublic)
 def get_item(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> Any:
     """
@@ -66,12 +67,14 @@ def get_item(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> A
         raise HTTPException(status_code=400, detail="Not enough permissions")
     return album
 
-@router.post(
-    "/", response_model=AlbumPublic
-)
+
+@router.post("/", response_model=AlbumPublic)
 def create_album(
-    *, session: SessionDep,current_user: CurrentUser, album_in: AlbumCreate,
-)-> Any:
+    *,
+    session: SessionDep,
+    current_user: CurrentUser,
+    album_in: AlbumCreate,
+) -> Any:
     """
     CREATE AN ALBUM
     """
@@ -80,18 +83,21 @@ def create_album(
 
     if album:
         raise HTTPException(
-            status_code=400,
-            detail = "An album with this title already exists"
+            status_code=400, detail="An album with this title already exists"
         )
-    album = crud.create_album(db=session, create_album=album_in, owner_id=current_user.id)
+    album = crud.create_album(
+        db=session, create_album=album_in, owner_id=current_user.id
+    )
     return album
 
-@router.put(
-    "/{id}",
-    response_model=AlbumPublic
-)
+
+@router.put("/{id}", response_model=AlbumPublic)
 def update_album(
-    *, session:SessionDep,id:uuid.UUID, album_in:AlbumUpdate, current_user: CurrentUser
+    *,
+    session: SessionDep,
+    id: uuid.UUID,
+    album_in: AlbumUpdate,
+    current_user: CurrentUser,
 ) -> Any:
     """
     UPDATE AN ALBUM
@@ -111,6 +117,7 @@ def update_album(
 
     new_album = crud.update_album(db=session, album=album, album_in=album_in)
     return new_album
+
 
 @router.delete("/{id}")
 def delete_album(
