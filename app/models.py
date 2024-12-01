@@ -137,7 +137,7 @@ class PhotoBase(SQLModel):
 
 
 class PhotoCreate(PhotoBase):
-    album_id: uuid.UUID
+    pass
 
 
 class PhotoUpdate(SQLModel):
