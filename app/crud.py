@@ -78,7 +78,7 @@ def authenticate_by_password(*, db: Session, email: str, password: str) -> User 
     return inst_user
 
 
-# ----------ALBUMS CURDS OPERATIONS--------
+# ----------ALBUMS CRUDS OPERATIONS--------
 
 
 def create_album(
@@ -109,6 +109,15 @@ def get_album_bg_id(
     album = db.exec(query).first()
     return album
 
+def get_album_by_title(
+    *, 
+    db: Session,
+    title: str 
+)-> Album | None:
+    statement = select(Album).where(Album.title == title)
+    inst_album = db.exec(statement).first()
+    return inst_album
+
 
 # ----------PHOTOS CURDS OPERATIONS--------
 
@@ -136,3 +145,4 @@ def update_photo(*, db: Session, photo: Photo, photo_in: PhotoUpdate) -> Photo:
     db.commit()
     db.refresh(photo)
     return photo
+
