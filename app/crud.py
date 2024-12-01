@@ -124,10 +124,7 @@ def create_photo(
 ) -> Photo:
     photo = Photo.model_validate(
         create_photo,
-        update={
-            "owner_id": owner_id,
-            "album_id": create_photo.album_id,
-        },
+        update={"owner_id": owner_id},
     )
     db.add(photo)
     db.commit()
@@ -142,3 +139,13 @@ def update_photo(*, db: Session, photo: Photo, photo_in: PhotoUpdate) -> Photo:
     db.commit()
     db.refresh(photo)
     return photo
+
+
+def get_photo_by_photo_title(
+    *, db: Session, photo_title: str, album_id: uuid.UUID
+) -> Photo | None:
+    statement = select(Photo).where(
+        and_(Photo.album_id == album_id, Photo.photo_title == photo_title)
+    )
+    inst_photo = db.exec(statement).first()
+    return inst_photo
