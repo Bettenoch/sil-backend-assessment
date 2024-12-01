@@ -1,14 +1,21 @@
 #app/api/routes/albums.py
 
-from typing import Any
 import uuid
+from typing import Any
+
 from fastapi import APIRouter, HTTPException
 from sqlmodel import desc, func, select
+
 from app import crud
-from app.api.user_controllers import CurrentUser, SessionDep, get_current_superuser
-
-from app.models import Album, AlbumCreate, AlbumPublic, AlbumUpdate, AlbumsPublic, Message
-
+from app.api.user_controllers import CurrentUser, SessionDep
+from app.models import (
+    Album,
+    AlbumCreate,
+    AlbumPublic,
+    AlbumsPublic,
+    AlbumUpdate,
+    Message,
+)
 
 router = APIRouter()
 
@@ -50,9 +57,9 @@ def get_item(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> A
     """
     GET ALL ALBUMS
     """
-    
+
     album = session.get(Album, id)
-        
+
     if not album:
         raise HTTPException(status_code=404, detail="Item not found")
     if not current_user.is_superuser and (album.owner_id != current_user.id):
@@ -63,14 +70,14 @@ def get_item(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> A
     "/", response_model=AlbumPublic
 )
 def create_album(
-    *, session: SessionDep,current_user: CurrentUser, album_in: AlbumCreate, 
+    *, session: SessionDep,current_user: CurrentUser, album_in: AlbumCreate,
 )-> Any:
     """
     CREATE AN ALBUM
     """
     album = crud.get_album_by_title(db=session, title=album_in.title)
     print(f"{current_user.name}")
-    
+
     if album:
         raise HTTPException(
             status_code=400,
@@ -92,7 +99,7 @@ def update_album(
     album = session.get(Album, id)
     if not album:
         raise HTTPException(status_code=404, detail="ALbum not found")
-    
+
     if album_in.title:
         existing_album = crud.get_album_by_title(db=session, title=album_in.title)
         if existing_album and existing_album.id != album.id:
@@ -101,7 +108,7 @@ def update_album(
             )
     if not current_user.is_superuser and (album.owner_id != current_user.id):
         raise HTTPException(status_code=400, detail="Not enough permissions")
-    
+
     new_album = crud.update_album(db=session, album=album, album_in=album_in)
     return new_album
 
@@ -117,7 +124,7 @@ def delete_album(
         raise HTTPException(status_code=404, detail="ALbum not found")
     if not current_user.is_superuser and (album.owner_id != current_user.id):
         raise HTTPException(status_code=400, detail="Not enough permissions")
-    
+
     session.delete(album)
     session.commit()
     return Message(message="Album deleted successfully")

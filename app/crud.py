@@ -110,9 +110,9 @@ def get_album_bg_id(
     return album
 
 def get_album_by_title(
-    *, 
+    *,
     db: Session,
-    title: str 
+    title: str
 )-> Album | None:
     statement = select(Album).where(Album.title == title)
     inst_album = db.exec(statement).first()
