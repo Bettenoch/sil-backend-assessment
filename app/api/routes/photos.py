@@ -1,4 +1,4 @@
-#app/api/routes/photos.py
+# app/api/routes/photos.py
 
 import uuid
 from typing import Any
@@ -20,16 +20,14 @@ from app.models import (
 
 router = APIRouter()
 
-@router.post(
-    "/",
-    response_model=PhotoPublic
-)
+
+@router.post("/", response_model=PhotoPublic)
 def create_photo(
     *,
     session: SessionDep,
     current_user: CurrentUser,
     album_id: uuid.UUID,
-    photo_in: PhotoCreate
+    photo_in: PhotoCreate,
 ) -> Any:
     """
     Create a new photo.
@@ -39,11 +37,13 @@ def create_photo(
     if not album:
         raise HTTPException(status_code=404, detail="Album not found")
 
-
-    photo = crud.get_photo_by_photo_title(db=session, photo_title=photo_in.photo_title, album_id=album_id)
+    photo = crud.get_photo_by_photo_title(
+        db=session, photo_title=photo_in.photo_title, album_id=album_id
+    )
     if photo:
         raise HTTPException(
-            status_code=400, detail="A photo with this title already exists in this album"
+            status_code=400,
+            detail="A photo with this title already exists in this album",
         )
     new_photo = Photo(
         photo_title=photo_in.photo_title,
@@ -62,10 +62,9 @@ def create_photo(
 
     return new_photo
 
+
 @router.get("/{id}", response_model=PhotoPublic)
-def get_photo(
-    *,session:SessionDep, id:uuid.UUID
-) -> Any:
+def get_photo(*, session: SessionDep, id: uuid.UUID) -> Any:
     """
     Get photo by ID.
     """
@@ -75,9 +74,15 @@ def get_photo(
         raise HTTPException(status_code=404, detail="Photo not found")
     return photo
 
+
 @router.get("/", response_model=PhotosPublic)
 def get_all_photos_in_an_album(
-    *,session:SessionDep,current_user: CurrentUser, album_id: uuid.UUID, skip: int = 0, limit: int = 100
+    *,
+    session: SessionDep,
+    current_user: CurrentUser,
+    album_id: uuid.UUID,
+    skip: int = 0,
+    limit: int = 100,
 ) -> Any:
     """
     Get all photos for an album.
@@ -100,7 +105,6 @@ def get_all_photos_in_an_album(
             select(func.count())
             .select_from(Photo)
             .where(Photo.owner_id == current_user.id and Photo.album_id == album_id)
-
         )
         count = session.exec(count_statement).one()
         statement = (
@@ -114,22 +118,27 @@ def get_all_photos_in_an_album(
 
     return PhotosPublic(data=photos, count=count)
 
-@router.put(
-    "/{id}", response_model=PhotoPublic
-)
+
+@router.put("/{id}", response_model=PhotoPublic)
 def update_photo(
-    *,session:SessionDep, current_user:CurrentUser, id:uuid.UUID, photo_in: PhotoUpdate
+    *,
+    session: SessionDep,
+    current_user: CurrentUser,
+    id: uuid.UUID,
+    photo_in: PhotoUpdate,
 ) -> Any:
     """
     Update an existing photo
     """
 
-    photo =  session.get(Photo, id)
+    photo = session.get(Photo, id)
     if not photo:
         raise HTTPException(status_code=404, detail="Photo not found")
 
     if photo_in.photo_title:
-        existing_photo = crud.get_photo_by_photo_title(db=session, photo_title=photo_in.photo_title, album_id=photo.id)
+        existing_photo = crud.get_photo_by_photo_title(
+            db=session, photo_title=photo_in.photo_title, album_id=photo.id
+        )
         if existing_photo and existing_photo.id != photo.id:
             raise HTTPException(
                 status_code=409, detail="Photo with this title already exist"
@@ -141,6 +150,7 @@ def update_photo(
 
     return new_photo
 
+
 @router.delete("/{id}")
 def delete_photo(
     session: SessionDep, current_user: CurrentUser, id: uuid.UUID
@@ -148,7 +158,7 @@ def delete_photo(
     """
     Delete an album
     """
-    photo =  session.get(Photo, id)
+    photo = session.get(Photo, id)
     if not photo:
         raise HTTPException(status_code=404, detail="ALbum not found")
     if not current_user.is_superuser and (photo.owner_id != current_user.id):

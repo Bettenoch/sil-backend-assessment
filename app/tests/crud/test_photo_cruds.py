@@ -40,11 +40,9 @@ def test_photo_create(*, db: Session) -> None:
         album_id=album_id,
     )
 
-
     db.add(photo)
     db.commit()
     db.refresh(photo)
-
 
     assert photo.photo_title == photo_title
     assert photo.image_url == image_url
