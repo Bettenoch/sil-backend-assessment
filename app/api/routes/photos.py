@@ -1,15 +1,22 @@
 #app/api/routes/photos.py
 
-from typing import Any
 import uuid
-from fastapi import APIRouter
+from typing import Any
+
 from fastapi import APIRouter, HTTPException
 from sqlmodel import desc, func, select
 
 from app import crud
 from app.api.user_controllers import CurrentUser, SessionDep
-from app.models import Album, Message, Photo, PhotoCreate, PhotoPublic, PhotoUpdate, PhotosPublic
-
+from app.models import (
+    Album,
+    Message,
+    Photo,
+    PhotoCreate,
+    PhotoPublic,
+    PhotosPublic,
+    PhotoUpdate,
+)
 
 router = APIRouter()
 
@@ -31,7 +38,7 @@ def create_photo(
     album = session.get(Album, album_id)
     if not album:
         raise HTTPException(status_code=404, detail="Album not found")
-    
+
 
     photo = crud.get_photo_by_photo_title(db=session, photo_title=photo_in.photo_title, album_id=album_id)
     if photo:
@@ -44,7 +51,7 @@ def create_photo(
         owner_id=current_user.id,
         album_id=album_id,
     )
-    
+
     try:
         session.add(new_photo)
         session.commit()
@@ -52,7 +59,7 @@ def create_photo(
     except Exception as e:
         session.rollback()
         raise HTTPException(status_code=500, detail=f"Error creating photo: {str(e)}")
-    
+
     return new_photo
 
 @router.get("/{id}", response_model=PhotoPublic)
@@ -62,7 +69,7 @@ def get_photo(
     """
     Get photo by ID.
     """
-    
+
     photo = session.get(Photo, id)
     if not photo:
         raise HTTPException(status_code=404, detail="Photo not found")
@@ -75,7 +82,7 @@ def get_all_photos_in_an_album(
     """
     Get all photos for an album.
     """
-    
+
     if current_user.is_superuser:
         statement = (
             select(Photo)
@@ -87,13 +94,13 @@ def get_all_photos_in_an_album(
         photos = session.exec(statement).all()
         count_statement = select(func.count()).select_from(Photo)
         count = session.exec(count_statement).one()
-    
+
     else:
         count_statement = (
             select(func.count())
             .select_from(Photo)
             .where(Photo.owner_id == current_user.id and Photo.album_id == album_id)
-            
+
         )
         count = session.exec(count_statement).one()
         statement = (
@@ -104,7 +111,7 @@ def get_all_photos_in_an_album(
             .order_by(desc(Photo.updated_at))
         )
         photos = session.exec(statement).all()
-        
+
     return PhotosPublic(data=photos, count=count)
 
 @router.put(
@@ -116,11 +123,11 @@ def update_photo(
     """
     Update an existing photo
     """
-    
+
     photo =  session.get(Photo, id)
     if not photo:
         raise HTTPException(status_code=404, detail="Photo not found")
-    
+
     if photo_in.photo_title:
         existing_photo = crud.get_photo_by_photo_title(db=session, photo_title=photo_in.photo_title, album_id=photo.id)
         if existing_photo and existing_photo.id != photo.id:
@@ -129,9 +136,9 @@ def update_photo(
             )
     if not current_user.is_superuser and (photo.owner_id != current_user.id):
         raise HTTPException(status_code=400, detail="Not enough permissions")
-    
+
     new_photo = crud.update_photo(db=session, photo=photo, photo_in=photo_in)
-    
+
     return new_photo
 
 @router.delete("/{id}")
