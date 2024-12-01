@@ -79,7 +79,6 @@ def create_album(
     CREATE AN ALBUM
     """
     album = crud.get_album_by_title(db=session, title=album_in.title)
-    print(f"{current_user.name}")
 
     if album:
         raise HTTPException(
