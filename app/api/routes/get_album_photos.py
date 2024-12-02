@@ -16,7 +16,7 @@ router = APIRouter()
 
 
 @router.get("/", response_model=PhotosPublic)
-def get_all_photos_in_an_album(
+def get_all_album_photos(
     *,
     session: SessionDep,
     album_id: uuid.UUID,
