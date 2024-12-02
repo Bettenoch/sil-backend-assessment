@@ -35,7 +35,9 @@ def get_all_photos_in_an_album(
         .order_by(desc(Photo.updated_at))
     )
     photos = session.exec(statement).all()
-    count_statement = select(func.count()).select_from(Photo).where(Photo.album_id == album_id)
+    count_statement = (
+        select(func.count()).select_from(Photo).where(Photo.album_id == album_id)
+    )
     count = session.exec(count_statement).one()
 
     return PhotosPublic(data=photos, count=count)

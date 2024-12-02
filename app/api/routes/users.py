@@ -22,9 +22,7 @@ from app.models import (
 router = APIRouter()
 
 
-@router.get(
-    "/", response_model=UsersPublic
-)
+@router.get("/", response_model=UsersPublic)
 def get_all_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
     """
     Get all users
@@ -33,7 +31,9 @@ def get_all_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
 
     count = session.exec(statement).one()
 
-    user_statement = select(User).offset(skip).limit(limit).order_by(desc(User.created_at))
+    user_statement = (
+        select(User).offset(skip).limit(limit).order_by(desc(User.created_at))
+    )
     users = session.exec(user_statement).all()
 
     return UsersPublic(data=users, count=count)

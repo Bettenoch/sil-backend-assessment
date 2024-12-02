@@ -21,9 +21,7 @@ router = APIRouter()
 
 
 @router.get("/", response_model=AlbumsPublic)
-def get_albums(
-    session: SessionDep, skip: int = 0, limit: int = 100
-) -> Any:
+def get_albums(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
     """
     GET ALL ALBUMS
     """
