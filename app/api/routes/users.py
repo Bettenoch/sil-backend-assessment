@@ -2,7 +2,7 @@ import uuid
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import func, select
+from sqlmodel import desc, func, select
 
 from app import crud
 from app.api.user_controllers import CurrentUser, SessionDep, get_current_superuser
@@ -22,9 +22,7 @@ from app.models import (
 router = APIRouter()
 
 
-@router.get(
-    "/", dependencies=[Depends(get_current_superuser)], response_model=UsersPublic
-)
+@router.get("/", response_model=UsersPublic)
 def get_all_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
     """
     Get all users
@@ -33,7 +31,9 @@ def get_all_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
 
     count = session.exec(statement).one()
 
-    user_statement = select(User).offset(skip).limit(limit)
+    user_statement = (
+        select(User).offset(skip).limit(limit).order_by(desc(User.created_at))
+    )
     users = session.exec(user_statement).all()
 
     return UsersPublic(data=users, count=count)
@@ -172,10 +172,6 @@ def get_user_by_id(
     user = session.get(User, user_id)
     if user == current_user:
         return user
-    if not current_user.is_superuser:
-        raise HTTPException(
-            status_code=403, detail="The user doesnt have enough privileges"
-        )
     return user
 
 
