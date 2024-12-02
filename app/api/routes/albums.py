@@ -22,39 +22,23 @@ router = APIRouter()
 
 @router.get("/", response_model=AlbumsPublic)
 def get_albums(
-    session: SessionDep, current_user: CurrentUser, skip: int = 0, limit: int = 100
+    session: SessionDep, skip: int = 0, limit: int = 100
 ) -> Any:
     """
     GET ALL ALBUMS
     """
-    if current_user.is_superuser:
-        total_statement = select(func.count()).select_from(Album)
-        count = session.exec(total_statement).one()
 
-        statement = (
-            select(Album).offset(skip).limit(limit).order_by(desc(Album.updated_at))
-        )
-        albums = session.exec(statement).all()
-    else:
-        total_statement = (
-            select(func.count())
-            .select_from(Album)
-            .where(Album.owner_id == current_user.id)
-        )
-        count = session.exec(total_statement).one()
-        statement = (
-            select(Album)
-            .where(Album.owner_id == current_user.id)
-            .offset(skip)
-            .limit(limit)
-            .order_by(desc(Album.updated_at))
-        )
-        albums = session.exec(statement).all()
+    total_statement = select(func.count()).select_from(Album)
+    count = session.exec(total_statement).one()
+
+    statement = select(Album).offset(skip).limit(limit).order_by(desc(Album.updated_at))
+    albums = session.exec(statement).all()
+
     return AlbumsPublic(data=albums, count=count)
 
 
 @router.get("/{id}", response_model=AlbumPublic)
-def get_item(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> Any:
+def get_album(session: SessionDep, id: uuid.UUID) -> Any:
     """
     GET ALL ALBUMS
     """
@@ -63,8 +47,6 @@ def get_item(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> A
 
     if not album:
         raise HTTPException(status_code=404, detail="Item not found")
-    if not current_user.is_superuser and (album.owner_id != current_user.id):
-        raise HTTPException(status_code=400, detail="Not enough permissions")
     return album
 
 
