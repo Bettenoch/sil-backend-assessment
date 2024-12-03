@@ -71,4 +71,3 @@ def get_photo(
     if not photo:
         raise HTTPException(status_code=404, detail="Photo not found")
     return photo
-

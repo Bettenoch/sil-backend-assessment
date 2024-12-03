@@ -7,6 +7,7 @@ from sqlmodel import desc, func, select
 from app.api.user_controllers import SessionDep
 from app.models import (
     Album,
+    AlbumPublic,
     AlbumsPublic,
     User,
 )
@@ -36,3 +37,22 @@ def get_all_user_albums(
     )
     albums = session.exec(statement).all()
     return AlbumsPublic(data=albums, count=count)
+
+@router.get("/{id}", response_model=AlbumPublic)
+def get_album(
+    session: SessionDep,
+    user_id: uuid.UUID,
+    id: uuid.UUID
+    ) -> Any:
+    """
+    GET ALL ALBUMS
+    """
+    user = session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    album = session.get(Album, id)
+
+    if not album:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return album
+
