@@ -17,6 +17,7 @@ from app.models import (
 
 router = APIRouter()
 
+
 @router.get("/", response_model=PhotosPublic)
 def get_all_album_photos(
     *,
@@ -29,10 +30,10 @@ def get_all_album_photos(
     """
     Get all photos for an album.
     """
-    
-    album_owner_id = get_album_owner_id(db=session, album_id=album_id)  
+
+    album_owner_id = get_album_owner_id(db=session, album_id=album_id)
     if album_owner_id != user_id:
-         raise HTTPException(status_code=403, detail="This user does not own this album")
+        raise HTTPException(status_code=403, detail="This user does not own this album")
     statement = (
         select(Photo)
         .where(Photo.album_id == album_id)
@@ -48,25 +49,20 @@ def get_all_album_photos(
 
     return PhotosPublic(data=photos, count=count)
 
+
 @router.get("/{id}", response_model=PhotoPublic)
 def get_photo(
-    *,
-    session: SessionDep,
-    user_id: uuid.UUID,
-    album_id: uuid.UUID,
-    id: uuid.UUID
-    
-    ) -> Any:
+    *, session: SessionDep, user_id: uuid.UUID, album_id: uuid.UUID, id: uuid.UUID
+) -> Any:
     """
     Get photo by ID.
-    
     """
     user = session.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    album_owner_id = get_album_owner_id(db=session, album_id=album_id) 
+    album_owner_id = get_album_owner_id(db=session, album_id=album_id)
     if album_owner_id != user_id:
-         raise HTTPException(status_code=403, detail="This user does not own this album")
+        raise HTTPException(status_code=403, detail="This user does not own this album")
     photo = session.get(Photo, id)
     if not photo:
         raise HTTPException(status_code=404, detail="Photo not found")

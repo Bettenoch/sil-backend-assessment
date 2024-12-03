@@ -20,6 +20,8 @@ api_router.include_router(
 )
 api_router.include_router(photos.router, prefix="/photos", tags=["photos"])
 api_router.include_router(
-    get_album_photos.router, prefix="/users/{user_id}/albums/{album_id}/photos", tags=["all_album_photos"]
+    get_album_photos.router,
+    prefix="/users/{user_id}/albums/{album_id}/photos",
+    tags=["all_album_photos"],
 )
 api_router.include_router(health_check.router, prefix="/health", tags=["health"])

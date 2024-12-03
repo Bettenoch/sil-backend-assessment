@@ -38,12 +38,9 @@ def get_all_user_albums(
     albums = session.exec(statement).all()
     return AlbumsPublic(data=albums, count=count)
 
+
 @router.get("/{id}", response_model=AlbumPublic)
-def get_album(
-    session: SessionDep,
-    user_id: uuid.UUID,
-    id: uuid.UUID
-    ) -> Any:
+def get_album(session: SessionDep, user_id: uuid.UUID, id: uuid.UUID) -> Any:
     """
     GET ALL ALBUMS
     """
@@ -55,4 +52,3 @@ def get_album(
     if not album:
         raise HTTPException(status_code=404, detail="Item not found")
     return album
-

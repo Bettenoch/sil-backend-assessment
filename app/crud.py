@@ -68,6 +68,7 @@ def get_user_by_email(*, db: Session, email: str) -> User | None:
     inst_user = db.exec(statement).first()
     return inst_user
 
+
 def get_album_owner_id(*, db: Session, album_id: uuid.UUID) -> uuid.UUID | None:
     """
     get album owner id
