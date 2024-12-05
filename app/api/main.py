@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from app.api.routes import (
     albums,
     get_album_photos,
+    get_all_photos,
     get_user_albums,
     health_check,
     login,
@@ -23,5 +24,11 @@ api_router.include_router(
     get_album_photos.router,
     prefix="/users/{user_id}/albums/{album_id}/photos",
     tags=["all_album_photos"],
+)
+
+api_router.include_router(
+    get_all_photos.router,
+    prefix="/all_photos",
+    tags=["all_photos"],
 )
 api_router.include_router(health_check.router, prefix="/health", tags=["health"])

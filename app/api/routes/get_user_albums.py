@@ -40,7 +40,7 @@ def get_all_user_albums(
 
 
 @router.get("/{id}", response_model=AlbumPublic)
-def get_album(session: SessionDep, user_id: uuid.UUID, id: uuid.UUID) -> Any:
+def get_album_id(session: SessionDep, user_id: uuid.UUID, id: uuid.UUID) -> Any:
     """
     GET ALL ALBUMS
     """

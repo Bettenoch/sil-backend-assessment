@@ -51,7 +51,7 @@ def get_all_album_photos(
 
 
 @router.get("/{id}", response_model=PhotoPublic)
-def get_photo(
+def get_photo_id(
     *, session: SessionDep, user_id: uuid.UUID, album_id: uuid.UUID, id: uuid.UUID
 ) -> Any:
     """
