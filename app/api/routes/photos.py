@@ -1,5 +1,6 @@
 # app/api/routes/photos.py
 
+import logging
 import uuid
 from typing import Any
 
@@ -32,19 +33,29 @@ def create_photo(
     """
     Create a new photo.
     """
+    logging.info(f"Received album_id: {album_id}")
+    logging.info(f"Received photo data: {photo_in}")
 
+    # Fetch the album
     album = session.get(Album, album_id)
     if not album:
+        logging.error(f"Album with id {album_id} not found")
         raise HTTPException(status_code=404, detail="Album not found")
 
-    photo = crud.get_photo_by_photo_title(
+    # Check if photo already exists
+    existing_photo = crud.get_photo_by_photo_title(
         db=session, photo_title=photo_in.photo_title, album_id=album_id
     )
-    if photo:
+    if existing_photo:
+        logging.warning(
+            f"A photo with title '{photo_in.photo_title}' already exists in album {album_id}"
+        )
         raise HTTPException(
             status_code=400,
             detail="A photo with this title already exists in this album",
         )
+
+    # Create a new photo
     new_photo = Photo(
         photo_title=photo_in.photo_title,
         image_url=photo_in.image_url,
@@ -56,8 +67,12 @@ def create_photo(
         session.add(new_photo)
         session.commit()
         session.refresh(new_photo)
+        logging.info(
+            f"Photo '{new_photo.photo_title}' created successfully with id {new_photo.id}"
+        )
     except Exception as e:
         session.rollback()
+        logging.error(f"Error creating photo: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error creating photo: {str(e)}")
 
     return new_photo

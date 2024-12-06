@@ -69,6 +69,15 @@ def get_user_by_email(*, db: Session, email: str) -> User | None:
     return inst_user
 
 
+def get_album_owner_id(*, db: Session, album_id: uuid.UUID) -> uuid.UUID | None:
+    """
+    get album owner id
+    """
+    statement = select(Album.owner_id).where(Album.id == album_id)
+    owner_id = db.exec(statement).one_or_none()
+    return owner_id
+
+
 def authenticate_by_password(*, db: Session, email: str, password: str) -> User | None:
     inst_user = get_user_by_email(db=db, email=email)
     if not inst_user:
