@@ -22,7 +22,6 @@ wait_seconds = 1
 def init(db_engine: Engine) -> None:
     try:
         with Session(db_engine) as session:
-
             session.exec(select(1))
     except Exception as e:
         logger.error(e)
