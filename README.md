@@ -13,7 +13,7 @@
 
 [SIL STUDIO](https://aimeos.org/TYPO3) SIL Studio is a modern photo management application that allows users to create albums and add photos to those albums. Built with a robust backend powered by FastAPI and a sleek, high-performance frontend developed using React and Vite, SIL Studio provides an intuitive user experience for organizing and showcasing your memories.
 
-[![HOME](public/images/app/sil07.png)](https://github.com/Bettenoch/sil-frontend-assessment)
+[![HOME](assets/app/sil07.png)](https://github.com/Bettenoch/sil-frontend-assessment)
 ## Table Of Content
 
 ## Technology Stack and Features
@@ -50,23 +50,23 @@
  [Frontend Link](https://github.com/Bettenoch/sil-frontend-assessment)
 ### Home page dark mode
 
-[![SIL STUDIO](public/images/app/sil01.png)](https://github.com/Bettenoch/sil-frontend-assessment)
+[![SIL STUDIO](assets/app/sil01.png)](https://github.com/Bettenoch/sil-frontend-assessment)
 
 ### HOME LIGHT MODE
 
-[![SIL STUDIO](public/images/app/sil02.png)](https://github.com/Bettenoch/sil-frontend-assessment)
+[![SIL STUDIO](assets/app/sil02.png)](https://github.com/Bettenoch/sil-frontend-assessment)
 
 ### Dashboard - Users
 
-[![SIL STUDIO](public/images/app/sil03.png)](https://github.com/Bettenoch/sil-frontend-assessment)
+[![SIL STUDIO](assets/app/sil03.png)](https://github.com/Bettenoch/sil-frontend-assessment)
 
 ### Dashboard - Albums
 
-[![SIL STUDIO](public/images/app/sil04.png)](https://github.com/Bettenoch/sil-frontend-assessment)
+[![SIL STUDIO](assets/app/sil04.png)](https://github.com/Bettenoch/sil-frontend-assessment)
 
 ### Dashboard - Photos
 
-[![SIL STUDIO](public/images/app/sil05.png)](https://github.com/Bettenoch/sil-frontend-assessment)
+[![SIL STUDIO](pssets/app/sil05.png)](https://github.com/Bettenoch/sil-frontend-assessment)
 
 
 
