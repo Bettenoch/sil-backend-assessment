@@ -1,14 +1,8 @@
+# Python
 __pycache__
-.venv
-.env
-
-/test-results/
-.vscode
-
 app.egg-info
 *.pyc
 .mypy_cache
 .coverage
 htmlcov
-.cache
-*Zone.Identifier
+.venv
