@@ -11,3 +11,4 @@ app.egg-info
 .coverage
 htmlcov
 .cache
+*Zone.Identifier
