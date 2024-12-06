@@ -67,14 +67,15 @@ def create_photo(
         session.add(new_photo)
         session.commit()
         session.refresh(new_photo)
-        logging.info(f"Photo '{new_photo.photo_title}' created successfully with id {new_photo.id}")
+        logging.info(
+            f"Photo '{new_photo.photo_title}' created successfully with id {new_photo.id}"
+        )
     except Exception as e:
         session.rollback()
         logging.error(f"Error creating photo: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error creating photo: {str(e)}")
 
     return new_photo
-
 
 
 @router.get("/{id}", response_model=PhotoPublic)
