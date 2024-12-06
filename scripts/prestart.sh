@@ -36,6 +36,6 @@ alembic upgrade head
 
 # Create initial data in DB
 echo "Creating initial data..."
-python app/initial_data.py
+python app/initialize_db.py
 
 echo "Prestart script completed."
